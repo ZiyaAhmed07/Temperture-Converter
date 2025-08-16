@@ -1,0 +1,68 @@
+import tkinter as tk
+from tkinter import messagebox
+
+# Conversion functions
+def celsius_to_fahrenheit(c):
+    return (c * 9/5) + 32
+
+def fahrenheit_to_celsius(f):
+    return (f - 32) * 5/9
+
+# Event handlers
+def convert_temperature(event=None):
+    try:
+        if celsius_var.get():
+            c = float(celsius_var.get())
+            f = celsius_to_fahrenheit(c)
+            fahrenheit_var.set(f"{f:.2f}")
+        elif fahrenheit_var.get():
+            f = float(fahrenheit_var.get())
+            c = fahrenheit_to_celsius(f)
+            celsius_var.set(f"{c:.2f}")
+        else:
+            messagebox.showwarning("Empty Input", "Please enter a temperature to convert.")
+    except ValueError:
+        messagebox.showerror("Invalid Input", "Please enter a valid number.")
+
+def validate_input(event):
+    value = event.widget.get()
+    try:
+        float(value)
+        event.widget.config(bg="white")
+    except ValueError:
+        event.widget.config(bg="#ffcccc")  # light red for invalid
+
+# GUI Setup
+root = tk.Tk()
+root.title("Temperature Converter")
+root.geometry("350x250")
+root.configure(bg="#e6f2ff")
+
+title = tk.Label(root, text="Temperature Converter", font=("Arial", 16, "bold"), bg="#e6f2ff")
+title.pack(pady=10)
+
+frame = tk.Frame(root, bg="#e6f2ff")
+frame.pack(pady=10)
+
+# Celsius input
+tk.Label(frame, text="Celsius (°C):", font=("Arial", 12), bg="#e6f2ff").grid(row=0, column=0, padx=10, pady=10)
+celsius_var = tk.StringVar()
+celsius_entry = tk.Entry(frame, textvariable=celsius_var, width=20)
+celsius_entry.grid(row=0, column=1)
+celsius_entry.bind("<Return>", convert_temperature)
+celsius_entry.bind("<FocusOut>", validate_input)
+
+# Fahrenheit input
+tk.Label(frame, text="Fahrenheit (°F):", font=("Arial", 12), bg="#e6f2ff").grid(row=1, column=0, padx=10, pady=10)
+fahrenheit_var = tk.StringVar()
+fahrenheit_entry = tk.Entry(frame, textvariable=fahrenheit_var, width=20)
+fahrenheit_entry.grid(row=1, column=1)
+fahrenheit_entry.bind("<Return>", convert_temperature)
+fahrenheit_entry.bind("<FocusOut>", validate_input)
+
+# Convert button
+convert_btn = tk.Button(root, text="Convert", font=("Arial", 12), bg="#007acc", fg="white", command=convert_temperature)
+convert_btn.pack(pady=15)
+
+# Run app
+root.mainloop()
